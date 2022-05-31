@@ -4,8 +4,6 @@ import com.flamexander.spring.security.cookbook.dao.entities.Role;
 import com.flamexander.spring.security.cookbook.dao.entities.User;
 import com.flamexander.spring.security.cookbook.dao.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +34,11 @@ public class UserService implements UserDetailsService {
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        Collection<SimpleGrantedAuthority> rolesAndAuthorities = new ArrayList<>();
+        for(Role role:roles) {
+            rolesAndAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+            rolesAndAuthorities.addAll(role.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList()));
+        }
+        return rolesAndAuthorities;
     }
 }

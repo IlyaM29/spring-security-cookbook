@@ -5,6 +5,7 @@ import com.flamexander.spring.security.cookbook.dao.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,5 +41,11 @@ public class DemoController {
     public String daoTestPage(Principal principal) {
         User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("Unable to find user by username: " + principal.getName()));
         return "Authenticated user info: " + user.getUsername() + " : " + user.getEmail();
+    }
+
+    @GetMapping("/delete")
+    @PreAuthorize("hasAuthority('DELETE')")
+    public String deletePage() {
+        return "delete";
     }
 }
