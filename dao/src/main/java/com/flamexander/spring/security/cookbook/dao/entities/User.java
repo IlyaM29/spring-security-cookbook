@@ -1,6 +1,5 @@
 package com.flamexander.spring.security.cookbook.dao.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
